@@ -10,12 +10,16 @@ import CoreData
 
 @main
 struct DotsMobile_TestApp: App {
+    
+    @StateObject private var productsManager = ProductsManager()
+    
     let persistenceController = PersistenceController.shared
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environmentObject(productsManager)
         }
     }
 }
