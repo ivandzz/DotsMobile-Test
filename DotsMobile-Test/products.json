@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "name": "Protein Bar",
+        "category": "Food",
+        "price": 2.49,
+        "description": "High-protein snack bar with chocolate flavor."
+    },
+    {
+        "id": 2,
+        "name": "Jump Rope",
+        "category": "Fitness",
+        "price": 9.99,
+        "description": "Adjustable jump rope for cardio workouts."
+    },
+    {
+        "id": 3,
+        "name": "Yoga Mat",
+        "category": "Fitness",
+        "price": 19.99,
+        "description": "Non-slip mat, 6mm thickness."
+    },
+    {
+        "id": 4,
+        "name": "Bottle",
+        "category": "Accessories",
+        "price": 5.99,
+        "description": "Reusable water bottle, 600ml."
+    }
+]
