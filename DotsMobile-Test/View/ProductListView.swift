@@ -44,9 +44,6 @@ struct ProductListView: View {
             .navigationTitle("List of Products")
             .searchable(text: $query)
         }
-        .onAppear {
-            productsManager.fetchProducts()
-        }
     }
     
     private func makeProductCell(for product: Product) -> some View {
