@@ -10,6 +10,7 @@ import CoreData
 
 struct ProductListView: View {
     
+    //MARK: - Properties
     @EnvironmentObject private var productsManager: ProductsManager
     
     @State private var query = ""
@@ -18,6 +19,7 @@ struct ProductListView: View {
         productsManager.products.filter { $0.name.lowercased().contains(query.lowercased()) || query.isEmpty}
     }
     
+    //MARK: - View body
     var body: some View {
         NavigationStack {
             ScrollView {

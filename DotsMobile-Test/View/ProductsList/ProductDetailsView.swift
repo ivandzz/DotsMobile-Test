@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProductDetailsView: View {
     
+    //MARK: - Properties
     @EnvironmentObject private var favoritesManager: FavoritesManager
     
     let product: Product
@@ -17,6 +18,7 @@ struct ProductDetailsView: View {
         favoritesManager.isFavorite(product.id)
     }
     
+    //MARK: - View body
     var body: some View {
         VStack {
             VStack(spacing: 8) {

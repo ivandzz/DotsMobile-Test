@@ -10,13 +10,16 @@ import Combine
 
 final class ProductsManager: ObservableObject {
     
+    //MARK: - Properties
     @Published var products: [Product] = []
     @Published var errorMessage: String? = nil
     
+    //MARK: - Init
     init() {
         fetchProducts()
     }
 
+    //MARK: - Public methods
     func fetchProducts() {
         if let url = Bundle.main.url(forResource: "products", withExtension: "json") {
             do {
@@ -28,6 +31,8 @@ final class ProductsManager: ObservableObject {
                 self.errorMessage = error.localizedDescription
                 print("Error: \(error)")
             }
+        } else {
+            self.errorMessage = "File not found"
         }
     }
 }
