@@ -8,28 +8,14 @@
 import CoreData
 
 struct PersistenceController {
+    
     static let shared = PersistenceController()
 
-    @MainActor
-    static let preview: PersistenceController = {
-        let result = PersistenceController(inMemory: true)
-        let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-        }
-        do {
-            try viewContext.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-        return result
-    }()
-
     let container: NSPersistentContainer
+    
+    var context: NSManagedObjectContext {
+        container.viewContext
+    }
 
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "DotsMobile_Test")
@@ -53,5 +39,45 @@ struct PersistenceController {
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+    
+    func addFavorite(with id: Int) {
+        let request = FavoriteProduct.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %d", id)
+        
+        if let exists = try? context.fetch(request), exists.first != nil { return }
+        
+        let fav = FavoriteProduct(context: context)
+        fav.id = Int64(id)
+        save()
+    }
+    
+    func removeFavorite(with id: Int) {
+        let request = FavoriteProduct.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %d", id)
+
+        if let found = try? context.fetch(request).first {
+            context.delete(found)
+            save()
+        }
+    }
+    
+    func isFavorite(with id: Int) -> Bool {
+        let request = FavoriteProduct.fetchRequest()
+        request.fetchLimit = 1
+        request.predicate = NSPredicate(format: "id == %d", id)
+        return ((try? context.fetch(request).first) != nil)
+    }
+    
+    func fetchFavorites() -> [Int] {
+        let request = FavoriteProduct.fetchRequest()
+        let result = (try? context.fetch(request)) ?? []
+        return result.compactMap { Int($0.id) }
+    }
+    
+    private func save() {
+        if context.hasChanges {
+            try? context.save()
+        }
     }
 }

@@ -12,14 +12,13 @@ import CoreData
 struct DotsMobile_TestApp: App {
     
     @StateObject private var productsManager = ProductsManager()
-    
-    let persistenceController = PersistenceController.shared
+    @StateObject private var favoritesManager = FavoritesManager()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            ProductListView()
                 .environmentObject(productsManager)
+                .environmentObject(favoritesManager)
         }
     }
 }

@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  ProductListView.swift
 //  DotsMobile-Test
 //
 //  Created by Іван Джулинський on 08.11.2025.
@@ -8,9 +8,10 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
+struct ProductListView: View {
     
     @EnvironmentObject private var productsManager: ProductsManager
+    @EnvironmentObject private var favoritesManager: FavoritesManager
 
     var body: some View {
         NavigationStack {
@@ -19,7 +20,7 @@ struct ContentView: View {
                     LazyVStack(spacing: 12) {
                         ForEach(productsManager.products) { product in
                             NavigationLink {
-                                
+                                ProductDetailsView(product: product)
                             } label: {
                                 makeProductCell(for: product)
                             }
@@ -50,9 +51,10 @@ struct ContentView: View {
             Spacer()
             
             Text(String(product.price))
+                .font(.system(size: 16, weight: .medium))
                 .foregroundStyle(.primary)
             
-            Image(systemName: "star")
+            Image(systemName: favoritesManager.isFavorite(product.id) ? "star.fill" : "star")
                 .bold()
                 .foregroundStyle(.yellow)
         }
@@ -66,7 +68,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ProductListView()
         .environmentObject(ProductsManager())
-//        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        .environmentObject(FavoritesManager())
 }
