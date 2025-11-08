@@ -17,7 +17,7 @@ struct MainTabBarView: View {
             }
             
             Tab("Favorites", systemImage: "star.fill") {
-                ProductListView()
+                FavoritesListView()
             }
         }
     }

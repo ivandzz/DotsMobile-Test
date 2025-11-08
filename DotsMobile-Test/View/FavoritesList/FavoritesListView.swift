@@ -1,34 +1,34 @@
 //
-//  ProductListView.swift
+//  FavoritesListView.swift
 //  DotsMobile-Test
 //
 //  Created by Іван Джулинський on 08.11.2025.
 //
 
 import SwiftUI
-import CoreData
 
-struct ProductListView: View {
+struct FavoritesListView: View {
     
+    //MARK: - Properties
     @EnvironmentObject private var productsManager: ProductsManager
+    @EnvironmentObject private var favoritesManager: FavoritesManager
     
-    @State private var query = ""
-    
-    private var filteredProducts: [Product] {
-        productsManager.products.filter { $0.name.lowercased().contains(query.lowercased()) || query.isEmpty}
+    private var favoriteProducts: [Product] {
+        productsManager.products.filter { favoritesManager.favorites.contains($0.id) }
     }
     
+    //MARK: - View body
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack {
                     LazyVStack(spacing: 12) {
-                        if filteredProducts.isEmpty {
-                            Text("No products found")
+                        if favoriteProducts.isEmpty {
+                            Text("No favorite products yet")
                                 .font(.system(size: 24, weight: .bold))
                                 .foregroundStyle(.primary)
                         } else {
-                            ForEach(filteredProducts) { product in
+                            ForEach(favoriteProducts) { product in
                                 NavigationLink {
                                     ProductDetailsView(product: product)
                                 } label: {
@@ -40,14 +40,13 @@ struct ProductListView: View {
                     }
                 }
             }
-            .navigationTitle("List of Products")
-            .searchable(text: $query)
+            .navigationTitle("Favorite Products")
         }
     }
 }
 
 #Preview {
-    ProductListView()
+    FavoritesListView()
         .environmentObject(ProductsManager())
         .environmentObject(FavoritesManager())
 }
