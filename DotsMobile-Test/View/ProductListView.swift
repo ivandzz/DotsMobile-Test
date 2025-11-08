@@ -12,24 +12,37 @@ struct ProductListView: View {
     
     @EnvironmentObject private var productsManager: ProductsManager
     @EnvironmentObject private var favoritesManager: FavoritesManager
-
+    
+    @State private var query = ""
+    
+    private var filteredProducts: [Product] {
+        productsManager.products.filter { $0.name.lowercased().contains(query.lowercased()) || query.isEmpty}
+    }
+    
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack {
                     LazyVStack(spacing: 12) {
-                        ForEach(productsManager.products) { product in
-                            NavigationLink {
-                                ProductDetailsView(product: product)
-                            } label: {
-                                makeProductCell(for: product)
+                        if filteredProducts.isEmpty {
+                            Text("No products found")
+                                .font(.system(size: 24, weight: .bold))
+                                .foregroundStyle(.primary)
+                        } else {
+                            ForEach(filteredProducts) { product in
+                                NavigationLink {
+                                    ProductDetailsView(product: product)
+                                } label: {
+                                    makeProductCell(for: product)
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
                         }
                     }
                 }
             }
             .navigationTitle("List of Products")
+            .searchable(text: $query)
         }
         .onAppear {
             productsManager.fetchProducts()
@@ -63,7 +76,7 @@ struct ProductListView: View {
         .background(.quaternary)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .padding(.horizontal, 16)
-
+        
     }
 }
 
